@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#080B12" />
+<meta name="description" content="Premium 3D Rubik's Cube Puzzle Game" />
+<title>RUBIK • 3D Cube Puzzle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body data-theme="dark">
+
+<!-- LOADING SCREEN -->
+<div id="loadingScreen" class="loading-screen">
+  <div class="loader-content">
+    <div class="loader-cube">
+      <div class="loader-face front"></div>
+      <div class="loader-face back"></div>
+      <div class="loader-face top"></div>
+      <div class="loader-face bottom"></div>
+      <div class="loader-face left"></div>
+      <div class="loader-face right"></div>
+    </div>
+    <h1 class="loader-title">RUBIK</h1>
+    <p class="loader-subtitle">3D CUBE PUZZLE</p>
+    <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+    <p class="loader-status">Initializing engine…</p>
+  </div>
+</div>
+
+<!-- START SCREEN -->
+<div id="startScreen" class="start-screen">
+  <div class="start-backdrop"></div>
+  <div class="start-content">
+    <div class="start-logo">
+      <div class="start-logo-mark"></div>
+      <h1>RUBIK</h1>
+      <p>3D CUBE PUZZLE</p>
+    </div>
+    <div class="start-buttons">
+      <button class="btn btn-primary btn-lg" data-action="start-classic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span>PLAY NOW</span>
+      </button>
+      <button class="btn btn-secondary" data-action="start-practice">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+        <span>PRACTICE</span>
+      </button>
+      <button class="btn btn-ghost" data-action="open-help">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>HOW TO PLAY</span>
+      </button>
+      <button class="btn btn-ghost" data-action="open-settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>SETTINGS</span>
+      </button>
+    </div>
+    <div class="start-version">v1.0.0 • Premium Edition</div>
+  </div>
+</div>
+
+<!-- APP SHELL -->
+<div id="app" class="app hidden">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <div class="brand-text">
+          <div class="brand-title">RUBIK</div>
+          <div class="brand-subtitle">3×3 CUBE</div>
+        </div>
+      </div>
+    </div>
+    <div class="header-center">
+      <div class="mode-chip" id="modeChip">CLASSIC</div>
+    </div>
+    <div class="header-right">
+      <button class="icon-btn" data-action="toggle-fullscreen" aria-label="Fullscreen" title="Fullscreen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+      </button>
+      <button class="icon-btn" data-action="open-settings" aria-label="Settings" title="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+      <button class="icon-btn" data-action="open-help" aria-label="Help" title="Help">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN LAYOUT -->
+  <div class="main">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-view="game">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>Play</span>
+        </button>
+        <button class="nav-item" data-view="moves">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span>Moves</span>
+        </button>
+        <button class="nav-item" data-view="stats">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <span>Statistics</span>
+        </button>
+        <button class="nav-item" data-view="settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4"/></svg>
+          <span>Settings</span>
+        </button>
+        <button class="nav-item" data-view="help">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span>Help</span>
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-stat">
+          <div class="sidebar-stat-label">Best</div>
+          <div class="sidebar-stat-value" id="sidebarBest">--:--.--</div>
+        </div>
+        <div class="sidebar-stat">
+          <div class="sidebar-stat-label">Solves</div>
+          <div class="sidebar-stat-value" id="sidebarSolves">0</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER: GAME -->
+    <main class="game-area">
+      <div class="timer-panel">
+        <div class="timer-display" id="timerDisplay">00:00.00</div>
+        <div class="timer-meta">
+          <span class="meta-chip" id="bestChip">BEST —:—.—</span>
+          <span class="meta-chip" id="movesChip">0 MOVES</span>
+        </div>
+      </div>
+
+      <div class="canvas-wrap" id="canvasWrap">
+        <canvas id="gameCanvas"></canvas>
+        <div class="canvas-overlay" id="canvasOverlay">
+          <div class="hint" id="cubeHint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/><path d="M9 12l2 2 4-4"/></svg>
+            <span>Generate a scramble to begin</span>
+          </div>
+          <button class="reset-view-btn" id="resetViewBtn" title="Reset camera">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="scramble-panel">
+        <div class="scramble-label">SCRAMBLE</div>
+        <div class="scramble-text" id="scrambleText">— — —</div>
+        <div class="scramble-actions">
+          <button class="btn btn-primary" data-action="new-scramble">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+            <span>NEW SCRAMBLE</span>
+          </button>
+          <button class="btn btn-secondary" data-action="reset-cube">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            <span>RESET</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="controls-panel">
+        <div class="controls-row">
+          <button class="ctrl-btn" data-move="U"><span>U</span><small>CW</small></button>
+          <button class="ctrl-btn" data-move="U'"><span>U'</span><small>CCW</small></button>
+        </div>
+        <div class="controls-row">
+          <button class="ctrl-btn" data-move="L"><span>L</span><small>CW</small></button>
+          <button class="ctrl-btn" data-move="F"><span>F</span><small>CW</small></button>
+          <button class="ctrl-btn" data-move="R"><span>R</span><small>CW</small></button>
+          <button class="ctrl-btn" data-move="B"><span>B</span><small>CW</small></button>
+        </div>
+        <div class="controls-row">
+          <button class="ctrl-btn" data-move="D"><span>D</span><small>CW</small></button>
+          <button class="ctrl-btn" data-move="D'"><span>D'</span><small>CCW</small></button>
+        </div>
+        <div class="controls-row controls-row-small">
+          <button class="ctrl-btn alt" data-move="L'"><span>L'</span></button>
+          <button class="ctrl-btn alt" data-move="F'"><span>F'</span></button>
+          <button class="ctrl-btn alt" data-move="R'"><span>R'</span></button>
+          <button class="ctrl-btn alt" data-move="B'"><span>B'</span></button>
+        </div>
+      </div>
+    </main>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside class="right-panel" id="rightPanel">
+      <!-- MOVES VIEW -->
+      <section class="panel" data-panel="moves">
+        <div class="panel-header">
+          <h2>Move History</h2>
+          <div class="panel-actions">
+            <button class="btn btn-ghost btn-sm" data-action="undo" title="Undo (Ctrl+Z)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-15-6.7L3 13"/></svg>
+              <span>Undo</span>
+            </button>
+            <button class="btn btn-ghost btn-sm" data-action="redo" title="Redo (Ctrl+Y)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 15-6.7L21 13"/></svg>
+              <span>Redo</span>
+            </button>
+          </div>
+        </div>
+        <div class="moves-list" id="movesList">
+          <div class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <p>No moves yet</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- STATS VIEW -->
+      <section class="panel" data-panel="stats" hidden>
+        <div class="panel-header">
+          <h2>Statistics</h2>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Best</div>
+            <div class="stat-value" id="statBest">—:—.—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Ao5</div>
+            <div class="stat-value" id="statAo5">—:—.—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Ao12</div>
+            <div class="stat-value" id="statAo12">—:—.—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Solves</div>
+            <div class="stat-value" id="statSolves">0</div>
+          </div>
+        </div>
+        <div class="panel-header mt-2">
+          <h2>Recent Solves</h2>
+        </div>
+        <div class="solves-list" id="solvesList">
+          <div class="empty-state">
+            <p>No solves yet</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SETTINGS VIEW -->
+      <section class="panel" data-panel="settings" hidden>
+        <div class="panel-header">
+          <h2>Settings</h2>
+        </div>
+        <div class="settings-list">
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Appearance</div>
+              <div class="setting-desc">Dark, light, or system</div>
+            </div>
+            <select class="setting-select" data-setting="theme">
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+              <option value="system">System</option>
+            </select>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Animation Speed</div>
+              <div class="setting-desc">Rotation duration</div>
+            </div>
+            <select class="setting-select" data-setting="animSpeed">
+              <option value="fast">Fast (150ms)</option>
+              <option value="normal" selected>Normal (250ms)</option>
+              <option value="slow">Slow (400ms)</option>
+            </select>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Sound</div>
+              <div class="setting-desc">Audio feedback</div>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" data-setting="sound" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Haptic Feedback</div>
+              <div class="setting-desc">Vibration on mobile</div>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" data-setting="haptic" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Timer</div>
+              <div class="setting-desc">Start on first move</div>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" data-setting="timer" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-label">Auto Scramble</div>
+              <div class="setting-desc">Generate new scramble automatically</div>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" data-setting="autoScramble" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="danger-zone">
+          <button class="btn btn-danger" data-action="reset-data">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            <span>Reset All Data</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- HELP VIEW -->
+      <section class="panel" data-panel="help" hidden>
+        <div class="panel-header">
+          <h2>How to Play</h2>
+        </div>
+        <div class="help-content">
+          <div class="help-step">
+            <div class="help-num">1</div>
+            <div>Press <strong>NEW SCRAMBLE</strong> to shuffle the cube.</div>
+          </div>
+          <div class="help-step">
+            <div class="help-num">2</div>
+            <div>Solve the cube by rotating faces until each face has a single color.</div>
+          </div>
+          <div class="help-step">
+            <div class="help-num">3</div>
+            <div>Timer starts on your first move after a scramble.</div>
+          </div>
+          <div class="help-step">
+            <div class="help-num">4</div>
+            <div>Click &amp; drag on the cube to orbit the camera. Scroll to zoom.</div>
+          </div>
+        </div>
+        <div class="panel-header mt-2">
+          <h2>Keyboard Shortcuts</h2>
+        </div>
+        <div class="keys-grid">
+          <div class="key-item"><kbd>U</kbd> Upper CW</div>
+          <div class="key-item"><kbd>⇧ U</kbd> Upper CCW</div>
+          <div class="key-item"><kbd>D</kbd> Down CW</div>
+          <div class="key-item"><kbd>⇧ D</kbd> Down CCW</div>
+          <div class="key-item"><kbd>L</kbd> Left CW</div>
+          <div class="key-item"><kbd>⇧ L</kbd> Left CCW</div>
+          <div class="key-item"><kbd>R</kbd> Right CW</div>
+          <div class="key-item"><kbd>⇧ R</kbd> Right CCW</div>
+          <div class="key-item"><kbd>F</kbd> Front CW</div>
+          <div class="key-item"><kbd>⇧ F</kbd> Front CCW</div>
+          <div class="key-item"><kbd>B</kbd> Back CW</div>
+          <div class="key-item"><kbd>⇧ B</kbd> Back CCW</div>
+          <div class="key-item"><kbd>Space</kbd> Pause/Resume</div>
+          <div class="key-item"><kbd>S</kbd> Scramble</div>
+          <div class="key-item"><kbd>Ctrl+Z</kbd> Undo</div>
+          <div class="key-item"><kbd>Ctrl+Y</kbd> Redo</div>
+        </div>
+      </section>
+
+      <!-- GAME VIEW (default on mobile) -->
+      <section class="panel" data-panel="game" hidden>
+        <div class="panel-header">
+          <h2>Game</h2>
+        </div>
+        <p class="text-muted">Rotate your device or use the main area for controls.</p>
+      </section>
+    </aside>
+  </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="mobile-nav">
+    <button class="mobile-nav-item active" data-view="game">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>Game</span>
+    </button>
+    <button class="mobile-nav-item" data-view="moves">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <span>Moves</span>
+    </button>
+    <button class="mobile-nav-item" data-view="stats">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>Stats</span>
+    </button>
+    <button class="mobile-nav-item" data-view="settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4"/></svg>
+      <span>Settings</span>
+    </button>
+  </nav>
+
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- MODAL: SOLVED -->
+<div class="modal-overlay hidden" id="solvedModal">
+  <div class="modal">
+    <div class="confetti-container" id="confetti"></div>
+    <div class="modal-head">
+      <div class="trophy-icon">🏆</div>
+      <h2>SOLVED!</h2>
+      <div class="big-time" id="solvedTime">00:00.00</div>
+      <div class="best-badge hidden" id="bestBadge">🎉 NEW PERSONAL BEST</div>
+    </div>
+    <div class="modal-stats">
+      <div class="modal-stat">
+        <div class="ms-label">Moves</div>
+        <div class="ms-value" id="solvedMoves">0</div>
+      </div>
+      <div class="modal-stat">
+        <div class="ms-label">Scramble</div>
+        <div class="ms-value ms-scramble" id="solvedScramble">—</div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" data-action="new-scramble">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+        <span>NEW SCRAMBLE</span>
+      </button>
+      <button class="btn btn-ghost" data-action="close-modal" data-modal="solvedModal">
+        <span>VIEW STATS</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CONFIRM -->
+<div class="modal-overlay hidden" id="confirmModal">
+  <div class="modal modal-sm">
+    <h2 id="confirmTitle">Confirm</h2>
+    <p id="confirmMessage">Are you sure?</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" data-action="close-modal" data-modal="confirmModal">
+        <span>Cancel</span>
+      </button>
+      <button class="btn btn-danger" id="confirmAction">
+        <span>Confirm</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
